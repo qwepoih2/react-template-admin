@@ -3,6 +3,7 @@ import { visualizer } from "rollup-plugin-visualizer";
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import { BASE_PATH } from "./global-config";
+import { branchVersionPlugin } from "./vite-plugin/branch-version-vite-plugin";
 
 const host = 'http://192.168.12.245' // test env
 
@@ -17,6 +18,7 @@ export default defineConfig(({mode}) => {
   return {
     base: BASE_PATH,
     plugins: [
+      branchVersionPlugin(),
       tailwindcss(),
       react(),
       // 只有在 build:report 时才激活
