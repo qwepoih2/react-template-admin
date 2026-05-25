@@ -1,0 +1,76 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.4.14/schema.json",
+  // 版本控制系统
+  "vcs": {
+    "enabled": true, // 是否启用。如果启用，Biome 会读取 .gitignore
+    "clientKind": "git", // 客户端类型，目前主要支持 "git"
+    "useIgnoreFile": true // 是否尊重 .gitignore 里的忽略规则
+  },
+  // 定义 Biome 应该扫描哪些文件
+  "files": {
+    "ignoreUnknown": true, // 布尔值，如果为 true，Biome 会跳过它无法识别扩展名的文件
+    "includes": ["src/**"], // 字符串数组，指定要处理的文件路径
+    "experimentalScannerIgnores": ["**/node_modules/**", "**/dist/**"] // 字符串数组，指定扫描器应该忽略的路径模式
+  },
+  // 类似于 Prettier，负责代码的自动排版（空格、缩进、换行等）
+  "formatter": {
+    "enabled": true, // 是否开启格式化功能
+    "indentStyle": "space", // 缩进方式，可选 "tab" 或 "space"
+    "formatWithErrors": false,
+    "indentWidth": 4, // 缩进的空格数（通常为 2 或 4）
+    "lineEnding": "lf", // 换行符类型（lf, crlf）
+    "lineWidth": 120, // 单行最大字符数
+    "attributePosition": "auto" // HTML 属性位置，"auto"（自动）或 "preserve"（保持原样）
+  },
+  // 类似于 ESLint，负责检查代码逻辑错误、潜在 Bug 以及不符合最佳实践的代码
+  "linter": {
+    "enabled": true,
+    // 在这里你可以细粒度地开启或关闭规则，并设置它们的严重程度（"off", "warn", "error"）
+    "rules": {
+      "recommended": true, // 设为 true 则启用 Biome 官方推荐的一套标准规则
+      // 风格,强制一致和惯用的代码编写方式的规则
+      "style": {
+        "useConst": "warn",
+        "useBlockStatements": "off"
+      },
+      // 正确性,检测保证不正确或无用的代码的规则
+      "correctness": {
+        "noUnusedVariables": "warn",
+        "noUndeclaredVariables": "off",
+        "useExhaustiveDependencies": "warn",
+        "noUnusedImports": "warn"
+      },
+      // 可疑代码, 检测可能不正确或无用的代码的规则
+      "suspicious": {
+        "noVar": "error",
+        "noConsole": "warn",
+        "noDebugger": "error",
+        "noDoubleEquals": "error"
+      },
+      // 可访问性
+      "a11y": {
+        "useAltText": "warn"
+      }
+    }
+  },
+  // 针对 JavaScript 和 TypeScript 的语言特性进行专属配置。
+  "javascript": {
+    // 格式化细调
+    "formatter": {
+      "quoteStyle": "double", // 字符串引号，"double"（双引号）或 "single"（单引号）
+      "semicolons": "always", // 分号策略，"always"（始终有）或 "asNeeded"（仅在必要时）
+      "trailingCommas": "all", // 尾随逗号，"all", "es5", 或 "none"
+      "bracketSpacing": true, // 对象字面量的大括号内是否加空格（true/false）
+      "arrowParentheses": "always"
+    }
+  }
+  //	,
+  //	"assist": {
+  //		"enabled": true,
+  //		"actions": {
+  //			"source": {
+  //				"organizeImports": "on" // 会自动删掉 未使用的import，还会重新排序import，暂时不用
+  //			}
+  //		}
+  //	}
+}

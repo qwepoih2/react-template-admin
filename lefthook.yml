@@ -1,0 +1,145 @@
+# =========================================================
+# Lefthook 配置文件
+# 作用：
+# 1. git commit 前自动格式化
+# 2. 自动执行 eslint
+# 3. 自动执行 TypeScript 类型检查
+# 4. 自动校验 commit message
+# =========================================================
+
+
+
+# 隐藏部分输出日志
+# 否则 commit 时终端日志会很多
+skip_output:
+  - meta # 隐藏 hook 元信息
+  - success # 隐藏成功日志
+  - summary # 隐藏最终汇总
+
+# =========================================================
+# git commit 前执行
+# =========================================================
+pre-commit:
+
+  # 所有任务并行执行
+  # 提高 commit 速度
+  parallel: true
+
+  commands:
+    # =====================================================
+    # biome 格式化
+    # =====================================================
+    biome-format:
+
+      # 只匹配这些文件
+      glob: "*.{js,jsx,ts,tsx,json,md}"
+
+      run: npx biome format --write --no-errors-on-unmatched {staged_files}
+      # biome format
+      #
+      # --write
+      # 自动写入修复结果
+      #
+      # --no-errors-on-unmatched
+      # 没有匹配文件时不报错
+      #
+      # {staged_files}
+      # 只处理 git add 的文件
+      #
+      # 不扫描整个项目
+      # 否则大型项目 commit 会很慢
+
+      stage_fixed: true
+      # biome 修改文件后
+      # 自动重新 git add
+      #
+      # 否则：
+      # 工作区是新代码
+      # 但 commit 的还是旧代码
+
+
+    # =====================================================
+    # eslint 检查
+    # =====================================================
+    eslint:
+
+      # 只检查 JS/TS/React 文件
+      glob: "*.{js,jsx,ts,tsx}"
+
+      run: npx eslint --fix {staged_files}
+      # eslint 自动修复
+      #
+      # 为什么还要 eslint？
+      #
+      # 因为 biome 虽然快
+      # 但 React 生态规则没 eslint 完整
+      #
+      # 例如：
+      # react-hooks/exhaustive-deps
+      # jsx-a11y
+      # react-refresh
+      #
+      # eslint 在 React 项目里仍然非常重要
+
+      stage_fixed: true
+      # eslint 修复后自动重新 git add
+
+
+
+    # =====================================================
+    # TypeScript 类型检查
+    # =====================================================
+    check-types:
+
+      # 只在 ts/tsx 文件变更时执行
+      glob: "*.{ts,tsx}"
+
+      run: npx tsc --noEmit
+      # TypeScript 类型检查
+      #
+      # --noEmit
+      # 不生成编译文件
+      #
+      # 只检查：
+      # 类型错误
+      # 类型不兼容
+      # ts 报错
+
+      # 注意：
+      # tsc 不支持 staged_files
+      #
+      # 因为：
+      # TypeScript 类型系统是全局分析
+      #
+      # 即使只改一个文件
+      # 也可能影响整个项目
+
+# =========================================================
+# commit message 校验
+# =========================================================
+commit-msg:
+
+  commands:
+
+    # =====================================================
+    # commit message 规范校验
+    # =====================================================
+    commitlint:
+      run: npx commitlint --edit {1}
+      # 检查 commit message 是否符合规范
+      #
+      # 例如：
+      # feat: 新增用户登录
+      # fix: 修复首页白屏
+      # docs: 更新 README
+      #
+      # 不符合规范会阻止 commit
+
+      skip: [merge, rebase]
+      # merge commit 跳过
+      # rebase 跳过
+      #
+      # 否则：
+      # git merge
+      # git rebase
+      # 可能会被 commitlint 拦截

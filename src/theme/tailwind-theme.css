@@ -1,0 +1,25 @@
+@import "tailwindcss";
+
+/**
+*  v4 会自动扫描你的 src 目录下所有的 js, ts, jsx, tsx 文件，
+*  寻找 className 中使用的 Tailwind CSS 类，并将它们包含在最终的 CSS 输出中。你不需要手动指定哪些类需要包含在内。
+*  如何限制范围 可以使用@source 来指定扫描的文件路径，例如：@source "./src!**!*.{js,ts,jsx,tsx}";
+*  可以使用 @theme 来定义全局的 CSS 变量，这些变量可以在 Tailwind CSS 的配置文件中引用，以便在整个项目中保持一致的设计系统。
+*/
+
+/*
+--color-*	bg-*, text-*, border-*	颜色系统（支持十六进制、RGB、变量引用）
+--font-*	font-*	字体家族
+--text-*	text-*	字体大小（可同时定义 line-height）
+--spacing-*	p-*, m-*, w-*, h-*	间距、尺寸系统
+--radius-*	rounded-*	圆角
+--shadow-*	shadow-*	阴影
+--breakpoint-*	sm:, md:, lg:	响应式断点
+--animate-*	animate-*	动画
+*/
+
+@theme {
+    --color-primary: var(--primary-color);
+    --color-secondary: var(--text);
+    /* --font-display: "Satoshi", "sans-serif"; 也可以定义字体 */
+}
